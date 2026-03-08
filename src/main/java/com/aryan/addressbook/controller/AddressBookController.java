@@ -21,4 +21,14 @@ public class AddressBookController {
 
         return service.addContact(name, contact);
     }
+
+    @PutMapping("/{bookName}/contacts")
+    public Contact updateContact(
+            @PathVariable String bookName,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestBody Contact contact) {
+
+        return service.updateContact(bookName, firstName, lastName, contact);
+    }
 }

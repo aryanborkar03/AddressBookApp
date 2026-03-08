@@ -26,8 +26,37 @@ public class AddressBookService {
         return contact;
     }
 
+    public Contact updateContact(String bookName,
+            String firstName,
+            String lastName,
+            Contact updatedContact) {
+
+        AddressBook book = addressBooks.get(bookName);
+
+        if (book == null) {
+            return null;
+        }
+
+        for (Contact contact : book.getContacts()) {
+
+            if (contact.getFirstName().equals(firstName) &&
+                    contact.getLastName().equals(lastName)) {
+
+                contact.setAddress(updatedContact.getAddress());
+                contact.setCity(updatedContact.getCity());
+                contact.setState(updatedContact.getState());
+                contact.setZip(updatedContact.getZip());
+                contact.setPhoneNumber(updatedContact.getPhoneNumber());
+                contact.setEmail(updatedContact.getEmail());
+
+                return contact;
+            }
+        }
+
+        return null;
+    }
+
     public AddressBook getAddressBook(String name) {
         return addressBooks.get(name);
-  
     }
 }
