@@ -1,4 +1,4 @@
-package com.aryan.addressbook;
+package com.aryan.addressbook.model;
 
 import java.util.Objects;
 
