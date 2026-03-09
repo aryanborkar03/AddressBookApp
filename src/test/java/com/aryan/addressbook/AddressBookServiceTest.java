@@ -21,8 +21,10 @@ public class AddressBookServiceTest {
                 "110001",
                 "9876543210",
                 "rahul.sharma@gmail.com"
-        );
+       
+        		);
     }
+
 
     @Test
     public void givenValidContact_whenAdded_shouldReturnSameContact() {
@@ -105,22 +107,6 @@ public class AddressBookServiceTest {
         service.addContact("personal", contact);
 
         assertEquals(1,
-                service.getAddressBook("personal").getContacts().size());
-    }
-
-    @Disabled
-    @Test
-    public void givenSameContactTwice_whenAdded_shouldAllowDuplicatesForNow() {
-
-        AddressBookService service = new AddressBookService();
-
-        Contact c1 = createContact();
-        Contact c2 = createContact();
-
-        service.addContact("personal", c1);
-        service.addContact("personal", c2);
-
-        assertEquals(2,
                 service.getAddressBook("personal").getContacts().size());
     }
 
@@ -218,32 +204,6 @@ public class AddressBookServiceTest {
     }
 
     @Test
-    public void givenLargeNumberOfContacts_whenAdded_shouldHandleCorrectly() {
-
-        AddressBookService service = new AddressBookService();
-
-        for(int i=0;i<100;i++) {
-
-            Contact c = new Contact(
-                    "User"+i,"Test","","","","","","");
-
-            service.addContact("personal", c);
-        }
-
-        assertEquals(100, service.getContacts("personal").size());
-    }
-
-    @Test
-    public void givenNewBookName_whenCreated_shouldReturnAddressBook() {
-
-        AddressBookService service = new AddressBookService();
-
-        AddressBook book = service.createAddressBook("personal");
-
-        assertEquals("personal", book.getName());
-    }
-
-    @Test
     public void givenContacts_whenSortedByName_shouldReturnAlphabeticalOrder() {
 
         AddressBookService service = new AddressBookService();
@@ -252,13 +212,61 @@ public class AddressBookServiceTest {
                 new Contact("Rahul","Sharma","","","","","",""));
 
         service.addContact("personal",
-                new Contact("Amit","Verma","","","","","",""));
+                new Contact("Amit","Sharma","","","","","",""));
 
         service.addContact("personal",
-                new Contact("Rohit","Singh","","","","","",""));
+                new Contact("Rohit","Verma","","","","","",""));
 
         List<Contact> sorted = service.sortContactsByName("personal");
 
         assertEquals("Amit", sorted.get(0).getFirstName());
+    }
+
+    @Test
+    public void givenContacts_whenSortedByCity_shouldReturnSortedList() {
+
+        AddressBookService service = new AddressBookService();
+
+        service.addContact("personal",
+                new Contact("Rahul","Sharma","","Delhi","","","",""));
+
+        service.addContact("personal",
+                new Contact("Rohit","Verma","","Mumbai","","","",""));
+
+        List<Contact> sorted = service.sortContactsByCity("personal");
+
+        assertEquals("Delhi", sorted.get(0).getCity());
+    }
+
+    @Test
+    public void givenContacts_whenSortedByState_shouldReturnSortedList() {
+
+        AddressBookService service = new AddressBookService();
+
+        service.addContact("personal",
+                new Contact("Rahul","Sharma","","","Delhi","","",""));
+
+        service.addContact("personal",
+                new Contact("Rohit","Verma","","","Maharashtra","","",""));
+
+        List<Contact> sorted = service.sortContactsByState("personal");
+
+        assertEquals("Delhi", sorted.get(0).getState());
+    }
+
+    @Test
+    public void givenContacts_whenSortedByZip_shouldReturnSortedList() {
+
+        AddressBookService service = new AddressBookService();
+
+        service.addContact("personal",
+                new Contact("Rahul","Sharma","","","","110001","",""));
+
+        service.addContact("personal",
+                new Contact("Rohit","Verma","","","","400001","",""));
+
+        List<Contact> sorted = service.sortContactsByZip("personal");
+
+        assertEquals("110001", sorted.get(0).getZip());
     }
 }

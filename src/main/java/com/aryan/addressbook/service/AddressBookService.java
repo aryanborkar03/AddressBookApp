@@ -181,4 +181,46 @@ public class AddressBookService {
                 .sorted(Comparator.comparing(Contact::getFirstName))
                 .collect(Collectors.toList());
     }
+    
+    public List<Contact> sortContactsByCity(String bookName) {
+
+        AddressBook book = addressBooks.get(bookName);
+
+        if(book == null) {
+            return new ArrayList<>();
+        }
+
+        return book.getContacts()
+                .stream()
+                .sorted(Comparator.comparing(Contact::getCity))
+                .collect(Collectors.toList());
+    }
+    
+    public List<Contact> sortContactsByState(String bookName) {
+
+        AddressBook book = addressBooks.get(bookName);
+
+        if(book == null) {
+            return new ArrayList<>();
+        }
+
+        return book.getContacts()
+                .stream()
+                .sorted(Comparator.comparing(Contact::getState))
+                .collect(Collectors.toList());
+    }
+    
+    public List<Contact> sortContactsByZip(String bookName) {
+
+        AddressBook book = addressBooks.get(bookName);
+
+        if(book == null) {
+            return new ArrayList<>();
+        }
+
+        return book.getContacts()
+                .stream()
+                .sorted(Comparator.comparing(Contact::getZip))
+                .collect(Collectors.toList());
+    }
 }

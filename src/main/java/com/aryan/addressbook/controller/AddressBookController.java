@@ -108,4 +108,22 @@ public class AddressBookController {
 
         return service.sortContactsByName(bookName);
     }
+    
+    @GetMapping("/{bookName}/sort/city")
+    public List<Contact> sortByCity(@PathVariable String bookName) {
+
+        return service.sortContactsByCity(bookName);
+    }
+    
+    @GetMapping("/{bookName}/sort/state")
+    public List<Contact> sortByState(@PathVariable String bookName) {
+
+        return service.sortContactsByState(bookName);
+    }
+    
+    @GetMapping("/{bookName}/sort/zip")
+    public List<Contact> sortByZip(@PathVariable String bookName) {
+
+        return service.sortContactsByZip(bookName);
+    }
 }
