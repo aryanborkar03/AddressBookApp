@@ -66,4 +66,16 @@ public class AddressBookController {
 
         return service.getAllAddressBooks();
     }
+    
+    @GetMapping("/search/city/{city}")
+    public List<Contact> searchByCity(@PathVariable String city) {
+
+        return service.searchByCity(city);
+    }
+    
+    @GetMapping("/search/state/{state}")
+    public List<Contact> searchByState(@PathVariable String state) {
+
+        return service.searchByState(state);
+    }
 }

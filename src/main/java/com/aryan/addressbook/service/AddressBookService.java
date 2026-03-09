@@ -5,6 +5,7 @@ import com.aryan.addressbook.model.Contact;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.*;
 
 @Service
 public class AddressBookService {
@@ -109,5 +110,23 @@ public class AddressBookService {
     
     public AddressBook getAddressBook(String name) {
         return addressBooks.get(name);
+    }
+    
+    public List<Contact> searchByCity(String city) {
+
+        return addressBooks.values()
+                .stream()
+                .flatMap(book -> book.getContacts().stream())
+                .filter(contact -> contact.getCity().equalsIgnoreCase(city))
+                .collect(Collectors.toList());
+    }
+    
+    public List<Contact> searchByState(String state) {
+
+        return addressBooks.values()
+                .stream()
+                .flatMap(book -> book.getContacts().stream())
+                .filter(contact -> contact.getState().equalsIgnoreCase(state))
+                .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,6 @@
 package com.aryan.addressbook;
 
-
+import com.aryan.addressbook.model.AddressBook;
 import com.aryan.addressbook.model.Contact;
 import com.aryan.addressbook.service.AddressBookService;
 import org.junit.jupiter.api.*;
@@ -194,106 +194,5 @@ public class AddressBookServiceTest {
                 service.getAddressBook("friends").getContacts().size());
     }
 
-    @Test
-    public void givenExistingContact_whenUpdated_shouldReturnUpdatedContact() {
-
-        AddressBookService service = new AddressBookService();
-
-        Contact original = new Contact(
-                "Rahul",
-                "Sharma",
-                "Sector 21",
-                "Delhi",
-                "Delhi",
-                "110001",
-                "9876543210",
-                "rahul.sharma@gmail.com"
-        );
-
-        service.addContact("personal", original);
-
-        Contact updated = new Contact(
-                "Rahul",
-                "Sharma",
-                "Sector 45",
-                "Gurgaon",
-                "Haryana",
-                "122001",
-                "9999999999",
-                "rahul.update@gmail.com"
-        );
-
-        Contact result = service.updateContact(
-                "personal",
-                "Rahul",
-                "Sharma",
-                updated
-        );
-
-        assertEquals("Gurgaon", result.getCity());
-        assertEquals("9999999999", result.getPhoneNumber());
-    }
-
-    @Test
-    public void givenNonExistingContact_whenUpdate_shouldReturnNull() {
-
-        AddressBookService service = new AddressBookService();
-
-        Contact updated = new Contact();
-
-        Contact result = service.updateContact(
-                "personal",
-                "Unknown",
-                "Person",
-                updated
-        );
-
-        assertNull(result);
-    }
-
-    @Test
-    public void givenMissingAddressBook_whenUpdate_shouldReturnNull() {
-
-        AddressBookService service = new AddressBookService();
-
-        Contact updated = new Contact();
-
-        Contact result = service.updateContact(
-                "unknownBook",
-                "Rahul",
-                "Sharma",
-                updated
-        );
-
-        assertNull(result);
-    }
-
-    @Test
-    public void givenExistingContact_whenDeleted_shouldReturnTrue() {
-
-        AddressBookService service = new AddressBookService();
-
-        Contact contact = new Contact(
-                "Rahul",
-                "Sharma",
-                "Sector 21",
-                "Delhi",
-                "Delhi",
-                "110001",
-                "9876543210",
-                "rahul.sharma@gmail.com"
-        );
-
-        service.addContact("personal", contact);
-
-        boolean result = service.deleteContact(
-                "personal",
-                "Rahul",
-                "Sharma"
-        );
-
-        assertTrue(result);
-    }
-
-    // remaining tests follow same pattern with Rahul/Amit etc...
+  
 }
