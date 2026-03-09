@@ -126,4 +126,20 @@ public class AddressBookController {
 
         return service.sortContactsByZip(bookName);
     }
+    
+    @PostMapping("/{bookName}/save")
+    public String saveContacts(
+            @PathVariable String bookName,
+            @RequestParam String filePath) {
+
+        service.saveContactsToFile(bookName, filePath);
+
+        return "Contacts saved to file";
+    }
+    
+    @GetMapping("/load")
+    public List<Contact> loadContacts(@RequestParam String filePath) {
+
+        return service.loadContactsFromFile(filePath);
+    }
 }
