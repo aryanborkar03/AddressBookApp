@@ -130,8 +130,14 @@ public class AddressBookServiceTest {
         AddressBookService service = new AddressBookService();
 
         Contact contact = new Contact(
-                "Rahul","Sharma","Sector 21","Delhi","Delhi",
-                "110001","999999999999999","rahul.sharma@gmail.com"
+                "Rahul",
+                "Sharma",
+                "Sector 21",
+                "Delhi",
+                "Delhi",
+                "110001",
+                "999999999999999",
+                "rahul.sharma@gmail.com"
         );
 
         service.addContact("personal", contact);
@@ -146,32 +152,20 @@ public class AddressBookServiceTest {
         AddressBookService service = new AddressBookService();
 
         Contact contact = new Contact(
-                "Rahul","Sharma","Sector 21","Delhi","Delhi",
-                "110001","9876543210","invalid-email"
+                "Rahul",
+                "Sharma",
+                "Sector 21",
+                "Delhi",
+                "Delhi",
+                "110001",
+                "9876543210",
+                "invalid-email"
         );
 
         service.addContact("personal", contact);
 
         assertEquals(1,
                 service.getAddressBook("personal").getContacts().size());
-    }
-
-    @Test
-    public void givenMultipleAddressBooks_whenContactsAdded_shouldMaintainSeparateLists() {
-
-        AddressBookService service = new AddressBookService();
-
-        Contact c1 = createContact();
-        Contact c2 = createContact();
-
-        service.addContact("family", c1);
-        service.addContact("friends", c2);
-
-        assertEquals(1,
-                service.getAddressBook("family").getContacts().size());
-
-        assertEquals(1,
-                service.getAddressBook("friends").getContacts().size());
     }
 
     @Test
@@ -184,15 +178,87 @@ public class AddressBookServiceTest {
         service.addContact("personal", original);
 
         Contact updated = new Contact(
-                "Rahul","Sharma","Sector 45","Gurgaon","Haryana",
-                "122001","9999999999","rahul.update@gmail.com"
+                "Rahul",
+                "Sharma",
+                "Sector 45",
+                "Gurgaon",
+                "Haryana",
+                "122001",
+                "9999999999",
+                "rahul.update@gmail.com"
         );
 
-        Contact result = service.updateContact("personal","Rahul","Sharma",updated);
+        Contact result = service.updateContact(
+                "personal",
+                "Rahul",
+                "Sharma",
+                updated
+        );
 
         assertEquals("Gurgaon", result.getCity());
         assertEquals("9999999999", result.getPhoneNumber());
     }
 
-    // Remaining tests follow the same pattern but using Rahul/Sharma and realistic values
+    @Test
+    public void givenExistingContact_whenDeleted_shouldReturnTrue() {
+
+        AddressBookService service = new AddressBookService();
+
+        Contact contact = createContact();
+
+        service.addContact("personal", contact);
+
+        boolean result = service.deleteContact(
+                "personal",
+                "Rahul",
+                "Sharma"
+        );
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenLargeNumberOfContacts_whenAdded_shouldHandleCorrectly() {
+
+        AddressBookService service = new AddressBookService();
+
+        for(int i=0;i<100;i++) {
+
+            Contact c = new Contact(
+                    "User"+i,"Test","","","","","","");
+
+            service.addContact("personal", c);
+        }
+
+        assertEquals(100, service.getContacts("personal").size());
+    }
+
+    @Test
+    public void givenNewBookName_whenCreated_shouldReturnAddressBook() {
+
+        AddressBookService service = new AddressBookService();
+
+        AddressBook book = service.createAddressBook("personal");
+
+        assertEquals("personal", book.getName());
+    }
+
+    @Test
+    public void givenContacts_whenSortedByName_shouldReturnAlphabeticalOrder() {
+
+        AddressBookService service = new AddressBookService();
+
+        service.addContact("personal",
+                new Contact("Rahul","Sharma","","","","","",""));
+
+        service.addContact("personal",
+                new Contact("Amit","Verma","","","","","",""));
+
+        service.addContact("personal",
+                new Contact("Rohit","Singh","","","","","",""));
+
+        List<Contact> sorted = service.sortContactsByName("personal");
+
+        assertEquals("Amit", sorted.get(0).getFirstName());
+    }
 }

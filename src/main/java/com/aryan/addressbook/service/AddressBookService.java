@@ -167,4 +167,18 @@ public class AddressBookService {
                         Collectors.counting()
                 ));
     }
+    
+    public List<Contact> sortContactsByName(String bookName) {
+
+        AddressBook book = addressBooks.get(bookName);
+
+        if(book == null) {
+            return new ArrayList<>();
+        }
+
+        return book.getContacts()
+                .stream()
+                .sorted(Comparator.comparing(Contact::getFirstName))
+                .collect(Collectors.toList());
+    }
 }
