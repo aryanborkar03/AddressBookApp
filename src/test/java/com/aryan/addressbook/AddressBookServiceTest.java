@@ -264,4 +264,59 @@ public class AddressBookServiceTest {
 
         assertNull(result);
     }
+
+    @Test
+    public void givenExistingContact_whenDeleted_shouldReturnTrue() {
+
+        AddressBookService service = new AddressBookService();
+
+        Contact contact = new Contact(
+                "Rahul",
+                "Sharma",
+                "Sector 21",
+                "Delhi",
+                "Delhi",
+                "110001",
+                "9876543210",
+                "rahul.sharma@gmail.com"
+        );
+
+        service.addContact("personal", contact);
+
+        boolean result = service.deleteContact(
+                "personal",
+                "Rahul",
+                "Sharma"
+        );
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenMissingContact_whenDelete_shouldReturnFalse() {
+
+        AddressBookService service = new AddressBookService();
+
+        boolean result = service.deleteContact(
+                "personal",
+                "Unknown",
+                "Person"
+        );
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenMissingAddressBook_whenDelete_shouldReturnFalse() {
+
+        AddressBookService service = new AddressBookService();
+
+        boolean result = service.deleteContact(
+                "unknownBook",
+                "Rahul",
+                "Sharma"
+        );
+
+        assertFalse(result);
+    }
 }
