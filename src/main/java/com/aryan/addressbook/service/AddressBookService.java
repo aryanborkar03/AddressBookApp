@@ -1,6 +1,8 @@
 package com.aryan.addressbook.service;
+
 import com.aryan.addressbook.model.AddressBook;
 import com.aryan.addressbook.model.Contact;
+import com.aryan.addressbook.util.CSVUtil;
 import com.aryan.addressbook.util.FileUtil;
 
 import org.springframework.stereotype.Service;
@@ -235,10 +237,26 @@ public class AddressBookService {
 
         FileUtil.writeContactsToFile(filePath, book.getContacts());
     }
-
-
+    
     public List<Contact> loadContactsFromFile(String filePath) {
 
         return FileUtil.readContactsFromFile(filePath);
+    }
+    
+    public void saveContactsToCSV(String bookName, String filePath) {
+
+        AddressBook book = addressBooks.get(bookName);
+
+        if(book == null) {
+            return;
+        }
+
+        CSVUtil.writeContactsToCSV(filePath, book.getContacts());
+    }
+
+
+    public List<Contact> loadContactsFromCSV(String filePath) {
+
+        return CSVUtil.readContactsFromCSV(filePath);
     }
 }

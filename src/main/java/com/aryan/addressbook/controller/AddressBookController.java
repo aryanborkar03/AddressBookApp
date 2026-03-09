@@ -142,4 +142,20 @@ public class AddressBookController {
 
         return service.loadContactsFromFile(filePath);
     }
+    
+    @PostMapping("/{bookName}/save-csv")
+    public String saveCSV(
+            @PathVariable String bookName,
+            @RequestParam String filePath) {
+
+        service.saveContactsToCSV(bookName, filePath);
+
+        return "Contacts saved to CSV";
+    }
+    
+    @GetMapping("/load-csv")
+    public List<Contact> loadCSV(@RequestParam String filePath) {
+
+        return service.loadContactsFromCSV(filePath);
+    }
 }
