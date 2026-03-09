@@ -1,6 +1,6 @@
 package com.aryan.addressbook;
 
-import com.aryan.addressbook.model.AddressBook;
+
 import com.aryan.addressbook.model.Contact;
 import com.aryan.addressbook.service.AddressBookService;
 import org.junit.jupiter.api.*;
