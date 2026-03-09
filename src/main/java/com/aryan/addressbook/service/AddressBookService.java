@@ -145,4 +145,26 @@ public class AddressBookService {
                 .flatMap(book -> book.getContacts().stream())
                 .collect(Collectors.groupingBy(Contact::getState));
     }
+    
+    public Map<String, Long> countContactsByCity() {
+
+        return addressBooks.values()
+                .stream()
+                .flatMap(book -> book.getContacts().stream())
+                .collect(Collectors.groupingBy(
+                        Contact::getCity,
+                        Collectors.counting()
+                ));
+    }
+    
+    public Map<String, Long> countContactsByState() {
+
+        return addressBooks.values()
+                .stream()
+                .flatMap(book -> book.getContacts().stream())
+                .collect(Collectors.groupingBy(
+                        Contact::getState,
+                        Collectors.counting()
+                ));
+    }
 }
