@@ -15,9 +15,20 @@ public class AddressBookService {
 
         AddressBook book = addressBooks.get(bookName);
 
-        if (book == null) {
+        if(book == null) {
             book = new AddressBook(bookName);
             addressBooks.put(bookName, book);
+        }
+
+        boolean duplicate = book.getContacts()
+                .stream()
+                .anyMatch(existing ->
+                        existing.getFirstName().equals(contact.getFirstName()) &&
+                        existing.getLastName().equals(contact.getLastName())
+                );
+
+        if(duplicate) {
+            throw new RuntimeException("Duplicate contact not allowed");
         }
 
         book.addContact(contact);
