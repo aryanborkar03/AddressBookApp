@@ -78,4 +78,16 @@ public class AddressBookController {
 
         return service.searchByState(state);
     }
+    
+    @GetMapping("/view/city")
+    public Map<String, List<Contact>> viewByCity() {
+
+        return service.viewPersonsByCity();
+    }
+    
+    @GetMapping("/view/state")
+    public Map<String, List<Contact>> viewByState() {
+
+        return service.viewPersonsByState();
+    }
 }
