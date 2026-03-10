@@ -158,4 +158,20 @@ public class AddressBookController {
 
         return service.loadContactsFromCSV(filePath);
     }
+    
+    @PostMapping("/{bookName}/save-json")
+    public String saveJSON(
+            @PathVariable String bookName,
+            @RequestParam String filePath) {
+
+        service.saveContactsToJSON(bookName, filePath);
+
+        return "Contacts saved to JSON";
+    }
+    
+    @GetMapping("/load-json")
+    public List<Contact> loadJSON(@RequestParam String filePath) {
+
+        return service.loadContactsFromJSON(filePath);
+    }
 }
