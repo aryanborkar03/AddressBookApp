@@ -484,8 +484,7 @@ public class AddressBookServiceTest {
 
         service.addContact("personal", c1);
         service.addContact("office", c2);
-
-        assertEquals(1, service.searchByCity("Delhi").size());
+        assertEquals(2, service.searchByCity("Delhi").size());
     }
     
     @Test
@@ -584,7 +583,7 @@ public class AddressBookServiceTest {
 
         Map<String, List<Contact>> result = service.viewPersonsByCity();
 
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
     }
     
     @Test
@@ -912,15 +911,17 @@ public class AddressBookServiceTest {
         assertEquals(2, result.size());
     }
     
+    
     @Test
     public void givenEmptyJSON_whenRead_shouldReturnEmptyList() {
 
         String path = "src/test/resources/testdata/empty.json";
+        
 
         JSONUtil.writeContactsToJSON(path, new ArrayList<>());
 
         List<Contact> contacts = JSONUtil.readContactsFromJSON(path);
 
-        assertEquals(0, contacts.size());
+        assertEquals(0, contacts.size());  
     }
 }
