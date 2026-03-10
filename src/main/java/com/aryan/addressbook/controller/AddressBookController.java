@@ -180,4 +180,19 @@ public class AddressBookController {
 
         return service.getContactsFromDatabase();
     }
+    
+    @PutMapping("/db/update-city")
+    public String updateContactCity(
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestParam String city) {
+
+        int updated = service.updateContactCity(firstName, lastName, city);
+
+        if(updated > 0) {
+            return "Contact updated successfully";
+        }
+
+        return "Contact not found";
+    }
 }

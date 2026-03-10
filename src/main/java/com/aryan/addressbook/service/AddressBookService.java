@@ -300,4 +300,9 @@ public class AddressBookService {
 
         return repository.getAllContacts();
     }
+    
+    public int updateContactCity(String firstName, String lastName, String city) {
+
+        return repository.updateContactCity(firstName, lastName, city);
+    }
 }
