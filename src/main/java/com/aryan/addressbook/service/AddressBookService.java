@@ -2,6 +2,7 @@ package com.aryan.addressbook.service;
 
 import com.aryan.addressbook.model.AddressBook;
 import com.aryan.addressbook.model.Contact;
+import com.aryan.addressbook.dto.ContactDTO;
 import com.aryan.addressbook.repository.ContactRepository;
 import com.aryan.addressbook.storage.ContactStorage;
 import com.aryan.addressbook.storage.FileStorage;
@@ -16,12 +17,40 @@ import java.util.stream.*;
 @Service
 public class AddressBookService {
 
-    private Map<String, AddressBook> addressBooks = new HashMap<>();
+	private final Map<String, AddressBook> addressBooks = new HashMap<>();
     
     private final ContactRepository repository;
 
     public AddressBookService(ContactRepository repository) {
         this.repository = repository;
+    }
+    
+    public Contact convertToModel(ContactDTO dto) {
+
+        return new Contact(
+                dto.getFirstName(),
+                dto.getLastName(),
+                dto.getAddress(),
+                dto.getCity(),
+                dto.getState(),
+                dto.getZip(),
+                dto.getPhoneNumber(),
+                dto.getEmail()
+        );
+    }
+    
+    public ContactDTO convertToDTO(Contact contact) {
+
+        return new ContactDTO(
+                contact.getFirstName(),
+                contact.getLastName(),
+                contact.getAddress(),
+                contact.getCity(),
+                contact.getState(),
+                contact.getZip(),
+                contact.getPhoneNumber(),
+                contact.getEmail()
+        );
     }
     
     public Contact addContact(String bookName, Contact contact) {
@@ -36,8 +65,8 @@ public class AddressBookService {
         boolean duplicate = book.getContacts()
                 .stream()
                 .anyMatch(existing ->
-                        existing.getFirstName().equals(contact.getFirstName()) &&
-                        existing.getLastName().equals(contact.getLastName())
+	                Objects.equals(existing.getFirstName(), contact.getFirstName()) &&
+	                Objects.equals(existing.getLastName(), contact.getLastName())
                 );
 
         if(duplicate) {
@@ -62,8 +91,8 @@ public class AddressBookService {
 
         for (Contact contact : book.getContacts()) {
 
-            if (contact.getFirstName().equals(firstName) &&
-                    contact.getLastName().equals(lastName)) {
+            if (Objects.equals(contact.getFirstName(), firstName) &&
+            		Objects.equals(contact.getLastName(), lastName)) {
 
                 contact.setAddress(updatedContact.getAddress());
                 contact.setCity(updatedContact.getCity());
@@ -89,8 +118,8 @@ public class AddressBookService {
             return false;
         }
 
-        return book.getContacts().removeIf(contact -> contact.getFirstName().equals(firstName) &&
-                contact.getLastName().equals(lastName));
+        return book.getContacts().removeIf(contact -> Objects.equals(contact.getFirstName(), firstName) &&
+        		Objects.equals(contact.getLastName(), lastName));
     }
     
     public List<Contact> getContacts(String bookName) {
@@ -129,7 +158,7 @@ public class AddressBookService {
         return addressBooks.values()
                 .stream()
                 .flatMap(book -> book.getContacts().stream())
-                .filter(contact -> contact.getCity().equalsIgnoreCase(city))
+                .filter(contact -> city.equalsIgnoreCase(contact.getCity()))
                 .collect(Collectors.toList());
     }
     
@@ -138,7 +167,7 @@ public class AddressBookService {
         return addressBooks.values()
                 .stream()
                 .flatMap(book -> book.getContacts().stream())
-                .filter(contact -> contact.getState().equalsIgnoreCase(state))
+                .filter(contact -> state.equalsIgnoreCase(contact.getState()))
                 .collect(Collectors.toList());
     }
     
@@ -309,5 +338,15 @@ public class AddressBookService {
     public List<Contact> getContactsByDateRange(String startDate, String endDate) {
 
         return repository.getContactsByDateRange(startDate, endDate);
+    }   
+    
+    public Map<String, Long> countContactsByCityFromDB() {
+
+        return repository.countContactsByCity();
+    }
+    
+    public Map<String, Long> countContactsByStateFromDB() {
+
+        return repository.countContactsByState();
     }
 }

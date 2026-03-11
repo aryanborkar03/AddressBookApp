@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @Repository
 public class ContactRepository {
@@ -107,5 +109,55 @@ public class ContactRepository {
         }
 
         return contacts;
+    }
+    
+    public Map<String, Long> countContactsByCity() {
+
+        String query =
+                "SELECT city, COUNT(*) as count FROM contacts GROUP BY city";
+
+        Map<String, Long> result = new HashMap<>();
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                result.put(
+                        rs.getString("city"),
+                        rs.getLong("count")
+                );
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+    
+    public Map<String, Long> countContactsByState() {
+
+        String query =
+                "SELECT state, COUNT(*) as count FROM contacts GROUP BY state";
+
+        Map<String, Long> result = new HashMap<>();
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                result.put(
+                        rs.getString("state"),
+                        rs.getLong("count")
+                );
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 }

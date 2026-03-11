@@ -2,6 +2,7 @@ package com.aryan.addressbook.controller;
 
 import com.aryan.addressbook.model.AddressBook;
 import com.aryan.addressbook.model.Contact;
+import com.aryan.addressbook.dto.ContactDTO;
 import com.aryan.addressbook.service.AddressBookService;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -15,23 +16,42 @@ public class AddressBookController {
     public AddressBookController(AddressBookService service) {
         this.service = service;
     }
+    
+    private List<ContactDTO> toDTOList(List<Contact> contacts) {
+
+        return contacts.stream()
+                .map(service::convertToDTO)
+                .toList();
+    }
 
     @PostMapping("/{name}/contacts")
-    public Contact addContact(
+    public ContactDTO addContact(
             @PathVariable String name,
-            @RequestBody Contact contact) {
+            @RequestBody ContactDTO dto) {
 
-        return service.addContact(name, contact);
+        Contact contact = service.convertToModel(dto);
+
+        Contact saved = service.addContact(name, contact);
+
+        return service.convertToDTO(saved);
     }
 
     @PutMapping("/{bookName}/contacts")
-    public Contact updateContact(
+    public ContactDTO updateContact(
             @PathVariable String bookName,
             @RequestParam String firstName,
             @RequestParam String lastName,
-            @RequestBody Contact contact) {
+            @RequestBody ContactDTO dto) {
 
-        return service.updateContact(bookName, firstName, lastName, contact);
+        Contact updatedContact = service.convertToModel(dto);
+
+        Contact result = service.updateContact(bookName, firstName, lastName, updatedContact);
+
+        if(result == null) {
+            return null;
+        }
+
+        return service.convertToDTO(result);
     }
 
     @DeleteMapping("/{bookName}/contacts")
@@ -50,9 +70,9 @@ public class AddressBookController {
     }
     
     @GetMapping("/{bookName}/contacts")
-    public List<Contact> getContacts(@PathVariable String bookName) {
+    public List<ContactDTO> getContacts(@PathVariable String bookName) {
 
-        return service.getContacts(bookName);
+        return toDTOList(service.getContacts(bookName));
     }
     
     @PostMapping("/{name}")
@@ -68,15 +88,15 @@ public class AddressBookController {
     }
     
     @GetMapping("/search/city/{city}")
-    public List<Contact> searchByCity(@PathVariable String city) {
+    public List<ContactDTO> searchByCity(@PathVariable String city) {
 
-        return service.searchByCity(city);
+        return toDTOList(service.searchByCity(city));
     }
     
     @GetMapping("/search/state/{state}")
-    public List<Contact> searchByState(@PathVariable String state) {
+    public List<ContactDTO> searchByState(@PathVariable String state) {
 
-        return service.searchByState(state);
+        return toDTOList(service.searchByState(state));
     }
     
     @GetMapping("/view/city")
@@ -104,27 +124,27 @@ public class AddressBookController {
     }
     
     @GetMapping("/{bookName}/sort/name")
-    public List<Contact> sortByName(@PathVariable String bookName) {
+    public List<ContactDTO> sortByName(@PathVariable String bookName) {
 
-        return service.sortContactsByName(bookName);
+        return toDTOList(service.sortContactsByName(bookName));
     }
     
     @GetMapping("/{bookName}/sort/city")
-    public List<Contact> sortByCity(@PathVariable String bookName) {
+    public List<ContactDTO> sortByCity(@PathVariable String bookName) {
 
-        return service.sortContactsByCity(bookName);
+        return toDTOList(service.sortContactsByCity(bookName));
     }
     
     @GetMapping("/{bookName}/sort/state")
-    public List<Contact> sortByState(@PathVariable String bookName) {
+    public List<ContactDTO> sortByState(@PathVariable String bookName) {
 
-        return service.sortContactsByState(bookName);
+        return toDTOList(service.sortContactsByState(bookName));
     }
     
     @GetMapping("/{bookName}/sort/zip")
-    public List<Contact> sortByZip(@PathVariable String bookName) {
+    public List<ContactDTO> sortByZip(@PathVariable String bookName) {
 
-        return service.sortContactsByZip(bookName);
+        return toDTOList(service.sortContactsByZip(bookName));
     }
     
     @PostMapping("/{bookName}/save")
@@ -138,9 +158,9 @@ public class AddressBookController {
     }
     
     @GetMapping("/load")
-    public List<Contact> loadContacts(@RequestParam String filePath) {
+    public List<ContactDTO> loadContacts(@RequestParam String filePath) {
 
-        return service.loadContactsFromFile(filePath);
+        return toDTOList(service.loadContactsFromFile(filePath));
     }
     
     @PostMapping("/{bookName}/save-csv")
@@ -154,9 +174,9 @@ public class AddressBookController {
     }
     
     @GetMapping("/load-csv")
-    public List<Contact> loadCSV(@RequestParam String filePath) {
+    public List<ContactDTO> loadCSV(@RequestParam String filePath) {
 
-        return service.loadContactsFromCSV(filePath);
+        return toDTOList(service.loadContactsFromCSV(filePath));
     }
     
     @PostMapping("/{bookName}/save-json")
@@ -170,15 +190,15 @@ public class AddressBookController {
     }
     
     @GetMapping("/load-json")
-    public List<Contact> loadJSON(@RequestParam String filePath) {
+    public List<ContactDTO> loadJSON(@RequestParam String filePath) {
 
-        return service.loadContactsFromJSON(filePath);
+        return toDTOList(service.loadContactsFromJSON(filePath));
     }
     
     @GetMapping("/db/contacts")
-    public List<Contact> getContactsFromDB() {
+    public List<ContactDTO> getContactsFromDB() {
 
-        return service.getContactsFromDatabase();
+        return toDTOList(service.getContactsFromDatabase());
     }
     
     @PutMapping("/db/update-city")
@@ -197,10 +217,22 @@ public class AddressBookController {
     }
     
     @GetMapping("/db/contacts-by-date")
-    public List<Contact> getContactsByDateRange(
+    public List<ContactDTO> getContactsByDateRange(
             @RequestParam String startDate,
             @RequestParam String endDate) {
 
-        return service.getContactsByDateRange(startDate, endDate);
+        return toDTOList(service.getContactsByDateRange(startDate, endDate));
+    }
+    
+    @GetMapping("/db/count/city")
+    public Map<String, Long> countContactsByCityDB() {
+
+        return service.countContactsByCityFromDB();
+    }
+    
+    @GetMapping("/db/count/state")
+    public Map<String, Long> countContactsByStateDB() {
+
+        return service.countContactsByStateFromDB();
     }
 }
