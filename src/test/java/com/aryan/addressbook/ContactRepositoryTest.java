@@ -1,5 +1,5 @@
 package com.aryan.addressbook;
-
+import com.aryan.addressbook.model.Contact;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,11 +12,34 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ContactRepositoryTest {
 
     @Autowired
-    ContactRepository repository;
+    private ContactRepository repository;
 
     @Test
     public void givenDatabase_whenContactsFetched_shouldReturnRecords() {
+         assertNotNull(repository.getAllContacts());
+        
+    }
 
-    	assertNotNull(repository.getAllContacts());
+    @Test
+    public void givenContact_whenCityUpdated_shouldReturnUpdatedRows() {
+
+        repository.save(new Contact(
+                "Rahul",
+                "Sharma",
+                "Sector 10",
+                "Delhi",
+                "Delhi",
+                "110001",
+                "9876543210",
+                "rahul@gmail.com"
+        ));
+
+        int rows = repository.updateContactCity(
+                "Rahul",
+                "Sharma",
+                "Sector 21"
+        );
+
+        assertTrue(rows > 0);
     }
 }

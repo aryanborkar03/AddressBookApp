@@ -51,7 +51,31 @@ public class ContactRepository {
 
         return contacts;
     }
-    
+    public int save(Contact contact) {
+
+        String query = "INSERT INTO contacts " +
+                "(first_name, last_name, city, state, zip, phone, email) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)
+        ) {
+
+            statement.setString(1, contact.getFirstName());
+            statement.setString(2, contact.getLastName());
+            statement.setString(3, contact.getCity());
+            statement.setString(4, contact.getState());
+            statement.setString(5, contact.getZip());
+            statement.setString(6, contact.getPhoneNumber());
+            statement.setString(7, contact.getEmail());
+
+            return statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save contact", e);
+        }
+    }
     public int updateContactCity(String firstName, String lastName, String city) {
 
         String query =
