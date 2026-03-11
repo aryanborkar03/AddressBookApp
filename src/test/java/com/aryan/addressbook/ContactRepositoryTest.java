@@ -1,45 +1,49 @@
 package com.aryan.addressbook;
-import com.aryan.addressbook.model.Contact;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.aryan.addressbook.model.Contact;
 import com.aryan.addressbook.repository.ContactRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
 
 @SpringBootTest
 public class ContactRepositoryTest {
 
     @Autowired
-    private ContactRepository repository;
+    ContactRepository repository;
 
     @Test
     public void givenDatabase_whenContactsFetched_shouldReturnRecords() {
-         assertNotNull(repository.getAllContacts());
-        
-    }
 
+    	assertNotNull(repository.getAllContacts());
+    }
+    
     @Test
     public void givenContact_whenCityUpdated_shouldReturnUpdatedRows() {
-
-        repository.save(new Contact(
-                "Rahul",
-                "Sharma",
-                "Sector 10",
-                "Delhi",
-                "Delhi",
-                "110001",
-                "9876543210",
-                "rahul@gmail.com"
-        ));
 
         int rows = repository.updateContactCity(
                 "Rahul",
                 "Sharma",
-                "Sector 21"
+                "Delhi"
         );
 
         assertTrue(rows > 0);
+    }
+    
+    @Test
+    public void givenDateRange_whenContactsFetched_shouldReturnRecords() {
+
+        List<Contact> contacts =
+                repository.getContactsByDateRange(
+                        "2026-03-01",
+                        "2026-03-10"
+                );
+
+        assertTrue(contacts.size() > 0);
     }
 }

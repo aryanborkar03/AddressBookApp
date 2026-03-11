@@ -51,31 +51,7 @@ public class ContactRepository {
 
         return contacts;
     }
-    public int save(Contact contact) {
-
-        String query = "INSERT INTO contacts " +
-                "(first_name, last_name, city, state, zip, phone, email) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        try (
-                Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)
-        ) {
-
-            statement.setString(1, contact.getFirstName());
-            statement.setString(2, contact.getLastName());
-            statement.setString(3, contact.getCity());
-            statement.setString(4, contact.getState());
-            statement.setString(5, contact.getZip());
-            statement.setString(6, contact.getPhoneNumber());
-            statement.setString(7, contact.getEmail());
-
-            return statement.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to save contact", e);
-        }
-    }
+    
     public int updateContactCity(String firstName, String lastName, String city) {
 
         String query =
@@ -93,5 +69,43 @@ public class ContactRepository {
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public List<Contact> getContactsByDateRange(String startDate, String endDate) {
+
+        List<Contact> contacts = new ArrayList<>();
+
+        String query =
+                "SELECT * FROM contacts WHERE date_added BETWEEN ? AND ?";
+
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, startDate);
+            statement.setString(2, endDate);
+
+            ResultSet rs = statement.executeQuery();
+
+            while(rs.next()) {
+
+                Contact contact = new Contact(
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        "",
+                        rs.getString("city"),
+                        rs.getString("state"),
+                        rs.getString("zip"),
+                        rs.getString("phone"),
+                        rs.getString("email")
+                );
+
+                contacts.add(contact);
+            }
+
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return contacts;
     }
 }

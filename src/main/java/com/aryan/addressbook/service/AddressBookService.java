@@ -305,4 +305,9 @@ public class AddressBookService {
 
         return repository.updateContactCity(firstName, lastName, city);
     }
+    
+    public List<Contact> getContactsByDateRange(String startDate, String endDate) {
+
+        return repository.getContactsByDateRange(startDate, endDate);
+    }
 }

@@ -195,4 +195,12 @@ public class AddressBookController {
 
         return "Contact not found";
     }
+    
+    @GetMapping("/db/contacts-by-date")
+    public List<Contact> getContactsByDateRange(
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+
+        return service.getContactsByDateRange(startDate, endDate);
+    }
 }
