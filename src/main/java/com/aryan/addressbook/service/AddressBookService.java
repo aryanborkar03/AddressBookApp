@@ -349,4 +349,9 @@ public class AddressBookService {
 
         return repository.countContactsByState();
     }
+    
+    public int addContactToDatabase(Contact contact) {
+
+        return repository.addContact(contact);
+    }
 }

@@ -160,4 +160,43 @@ public class ContactRepository {
 
         return result;
     }
+    
+    public int addContact(Contact contact) {
+
+        String query =
+                "INSERT INTO contacts " +
+                "(first_name,last_name,city,state,zip,phone,email,date_added) " +
+                "VALUES (?,?,?,?,?,?,?,CURDATE())";
+
+        try (Connection connection = dataSource.getConnection()) {
+
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement statement =
+                         connection.prepareStatement(query)) {
+
+                statement.setString(1, contact.getFirstName());
+                statement.setString(2, contact.getLastName());
+                statement.setString(3, contact.getCity());
+                statement.setString(4, contact.getState());
+                statement.setString(5, contact.getZip());
+                statement.setString(6, contact.getPhoneNumber());
+                statement.setString(7, contact.getEmail());
+
+                int rowsInserted = statement.executeUpdate();
+
+                connection.commit();
+
+                return rowsInserted;
+
+            } catch (Exception e) {
+
+                connection.rollback();
+                throw new RuntimeException("Insert failed", e);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Database error", e);
+        }
+    }
 }

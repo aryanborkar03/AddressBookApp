@@ -235,4 +235,18 @@ public class AddressBookController {
 
         return service.countContactsByStateFromDB();
     }
+    
+    @PostMapping("/db/add-contact")
+    public String addContactToDB(@RequestBody ContactDTO dto) {
+
+        Contact contact = service.convertToModel(dto);
+
+        int inserted = service.addContactToDatabase(contact);
+
+        if(inserted > 0) {
+            return "Contact added successfully";
+        }
+
+        return "Failed to add contact";
+    }
 }
