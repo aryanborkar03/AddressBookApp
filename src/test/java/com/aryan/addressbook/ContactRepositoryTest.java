@@ -28,9 +28,9 @@ public class ContactRepositoryTest {
     public void givenContact_whenCityUpdated_shouldReturnUpdatedRows() {
 
         int rows = repository.updateContactCity(
-                "Tarus",
-                "Prabhat",
-                "Pune"
+                "Rahul",
+                "Sharma",
+                "Delhi"
         );
 
         assertTrue(rows > 0);
